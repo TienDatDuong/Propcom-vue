@@ -1,0 +1,120 @@
+pipeline {
+  agent any
+  parameters {
+    booleanParam(defaultValue: true, description: 'Build', name: 'build')
+    booleanParam(defaultValue: true, description: 'Deploy', name: 'deploy')
+    // choice(
+    //   choices: ['prod', 'staging'],
+    //   description: 'Select target environment',
+    //   name: 'TARGET_ENVIRONMENT')
+  }
+  environment {
+    PATH = "/usr/local/bin:$PATH"
+    TARGET_REPO="web-prod"
+    IMAGE_NAME="spx-user-web"
+    BETA_SWARM_MASTER_HOST="swarmstaginghost.realagent.vn"
+    PROD_SWARM_MASTER_HOST="swarmprodhost.realagent.vn"
+    TARGET_PORT="${Math.abs( new Random().nextInt() % 100 ) + 2600}"
+  }
+  tools {nodejs "node"}
+
+  stages {
+    stage('Prepare') {
+        when {
+            expression { params.build }
+        }
+        steps {
+            echo 'install node'
+            // sh "npm install -g node-gyp"
+            // sh "npm install -g yarn"
+            // sh "yarn install"
+        }
+    }
+
+    stage('ECR login') {
+      steps {
+        sh 'rm  ~/.dockercfg || true'
+        sh 'rm ~/.docker/config.json || true'
+        withAWS(credentials: 'aws_deploy', region: 'ap-southeast-1') {
+          sh 'set +x && \$(aws ecr get-login --no-include-email --region ap-southeast-1)'
+        }
+      }
+    }
+    stage('Build & Push image') {
+      parallel {
+        stage('Build & Push Master') {
+          when {
+            expression { params.build }
+          }
+          steps {
+            buildAndPush(".env.prod", "build", "${TARGET_REPO}", "${env.BUILD_NUMBER}", "latest")
+          }
+        }
+      }
+    }
+
+    stage('Deploy') {
+      parallel {
+        stage('Deploy Prod') {
+          // when {
+          //   expression { params.TARGET_ENVIRONMENT == 'prod' }
+          // }
+          steps {
+            deploySwarm("prod.env", "prod_ssh_key", "${PROD_SWARM_MASTER_HOST}", "spx-user-web", "")
+          }
+        }
+
+        // stage('Deploy Master to Staging') {
+        //   when {
+        //     expression { params.deploy && params.TARGET_ENVIRONMENT == 'staging' }
+        //   }
+        //   steps {
+        //     deploySwarm("master-staging.env", "staging_ssh_key", "${BETA_SWARM_MASTER_HOST}", "spx-user-web", "")
+        //   }
+        // }
+      }
+    }
+  }
+  post {
+    // failure { .. }
+    // success { .. }
+    always {
+      sh"kill -9 \$(lsof -ti:${TARGET_PORT})"
+      cleanWs()
+    }
+  }
+}
+
+def deploySwarm(String ENV_FILE, String CRED_ID, String TARGET_HOST, String STACK_NAME, String DOCKER_FILE_POSFIX) {
+  dir("${env.WORKSPACE}/jenkins/deploy"){
+    sh" mv ${ENV_FILE} .env"
+    withCredentials([sshUserPrivateKey(credentialsId: CRED_ID, keyFileVariable: 'keyfile')]) {
+
+      sh"ssh -f -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -i ${keyfile} -NL localhost:${TARGET_PORT}:/var/run/docker.sock docker@${TARGET_HOST} sleep 30"
+      withAWS(credentials: 'aws_deploy', region: 'ap-southeast-1') {
+          sh"set +x && \$(aws ecr get-login --no-include-email |  sed 's|docker login -u AWS -p|docker -H localhost:${TARGET_PORT} login -u AWS -p|')"
+      }
+
+      sh"docker-compose -f docker-compose${DOCKER_FILE_POSFIX}.yml config  | docker -H localhost:${TARGET_PORT} stack deploy ${STACK_NAME} -c - --with-registry-auth"
+    }
+  }
+}
+
+def buildAndPush(String ENV_FILE, String BUILD_CMD, String TARGET_REPO, String BUILD_TAG, String ENV_TAG) {
+  dir("${env.WORKSPACE}"){
+    sh "rm -rf dist/"
+    sh "rm -rf yarn.lock"
+    sh "rm -rf package-lock.json"
+    sh "rm -rf .env"
+    sh" mv ${ENV_FILE} .env"
+    sh "npm i"
+    sh "npm run ${BUILD_CMD}"
+    sh "docker build -t ${TARGET_REPO}/${IMAGE_NAME}:${BUILD_TAG} ."
+    sh "docker tag ${TARGET_REPO}/${IMAGE_NAME}:${BUILD_TAG} 076218049049.dkr.ecr.ap-southeast-1.amazonaws.com/${TARGET_REPO}/${IMAGE_NAME}:${ENV_TAG}"
+    sh "docker tag ${TARGET_REPO}/${IMAGE_NAME}:${BUILD_TAG} 076218049049.dkr.ecr.ap-southeast-1.amazonaws.com/${TARGET_REPO}/${IMAGE_NAME}:${BUILD_TAG}"
+    sh "aws ecr describe-repositories --repository-names ${TARGET_REPO}/${IMAGE_NAME} || aws ecr create-repository --repository-name ${TARGET_REPO}/${IMAGE_NAME}"
+    sh "docker push 076218049049.dkr.ecr.ap-southeast-1.amazonaws.com/${TARGET_REPO}/${IMAGE_NAME}:${ENV_TAG}"
+    sh "docker push 076218049049.dkr.ecr.ap-southeast-1.amazonaws.com/${TARGET_REPO}/${IMAGE_NAME}:${BUILD_TAG}"
+    sh "docker rmi -f \$(docker images -q ${TARGET_REPO}/${IMAGE_NAME}:${BUILD_TAG})"
+  }
+}

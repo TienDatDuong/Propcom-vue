@@ -1,0 +1,28 @@
+version: "3"
+
+services:
+  spx-web-user:
+    image: spx/web-user
+    restart: always
+    ports:
+      - 51:80
+    networks:
+      - traefik-net
+
+  prerender:
+    image: tvanro/prerender-alpine:6.4.0
+    restart: always
+    ports:
+      - 3000:3000
+    networks:
+      - traefik-net
+    labels:
+      - "traefik.enable=false"
+      - "traefik.port=3000"
+
+# networks: ================================================================
+networks:
+  traefik-net:
+    driver: bridge
+    # external:
+    #     name: traefik_webgateway

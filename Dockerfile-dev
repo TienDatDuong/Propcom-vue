@@ -1,0 +1,31 @@
+# build stage
+# install simple http server for serving static content
+FROM node:lts-alpine as build-stage
+# make the 'app' folder the current working directory
+WORKDIR /app
+# copy 'package.json'
+COPY package.json ./
+COPY package-lock.json ./
+# install project dependencies
+RUN npm install
+# copy project files and folders to the current working directory (i.e. 'app' folder)
+COPY . .
+# build app for production with minification
+ARG BUILD_SCRIPT
+RUN npm run $BUILD_SCRIPT
+
+# production stage
+FROM nginx:stable-alpine as production-stage
+ARG WEB_HOST
+ENV WEB_HOST=$WEB_HOST
+ARG PRERENDER_URL
+ENV PRERENDER_URL=$PRERENDER_URL
+COPY --from=build-stage /app/dist /usr/share/nginx/html
+COPY ./nginx.conf /etc/nginx/
+COPY ./default.conf.template /etc/nginx/templates/default.conf.template
+
+# COPY ./certs/mycert.crt /etc/ssl/certs/mycert.crt
+# COPY ./certs/privateKey.key /etc/ssl/private/privateKey.key
+
+EXPOSE 80 443
+CMD ["nginx", "-g", "daemon off;"]

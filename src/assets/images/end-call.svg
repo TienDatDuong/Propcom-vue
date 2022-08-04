@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="56" height="56" viewBox="0 0 56 56">
+  <defs>
+    <linearGradient id="linear-gradient" x1="0.5" x2="0.5" y2="1" gradientUnits="objectBoundingBox">
+      <stop offset="0" stop-color="#f5821f"/>
+      <stop offset="1" stop-color="#ff614a"/>
+    </linearGradient>
+  </defs>
+  <g id="Group_2758" data-name="Group 2758" transform="translate(-1784 -944)">
+    <path id="Path_7361" data-name="Path 7361" d="M28,0A28,28,0,1,1,0,28,28,28,0,0,1,28,0Z" transform="translate(1784 944)" fill="url(#linear-gradient)"/>
+    <g id="telephone" transform="translate(1794.426 954.29)">
+      <g id="Group_2681" data-name="Group 2681" transform="translate(0)">
+        <path id="Path_7196" data-name="Path 7196" d="M27.635,66.689a2.546,2.546,0,0,0-3.849,0c-.9.892-1.8,1.785-2.685,2.692a.53.53,0,0,1-.741.136c-.582-.318-1.2-.575-1.762-.923a27.918,27.918,0,0,1-6.731-6.126,15.946,15.946,0,0,1-2.412-3.864.554.554,0,0,1,.136-.711c.9-.87,1.777-1.762,2.662-2.654a2.556,2.556,0,0,0-.008-3.94c-.7-.711-1.407-1.407-2.11-2.118C9.41,48.456,8.691,47.723,7.958,47a2.563,2.563,0,0,0-3.849.008c-.907.892-1.777,1.807-2.7,2.685A4.382,4.382,0,0,0,.032,52.653,12.528,12.528,0,0,0,1,58.046a32.765,32.765,0,0,0,5.816,9.688,35.988,35.988,0,0,0,11.918,9.325,17.237,17.237,0,0,0,6.6,1.921A4.838,4.838,0,0,0,29.488,77.4c.771-.862,1.641-1.649,2.458-2.473a2.573,2.573,0,0,0,.015-3.917Q29.806,68.841,27.635,66.689Z" transform="translate(74.285 50.56) rotate(135)" fill="#fff"/>
+      </g>
+    </g>
+  </g>
+</svg>

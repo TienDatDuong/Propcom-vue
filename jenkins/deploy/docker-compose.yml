@@ -1,0 +1,44 @@
+version: '3.7'
+services:
+  spx-user-web:
+    image: ${REGISTRY}/spx-user-web:${TAG}
+    environment:
+      - NODE_ENV=production
+      - WEB_HOST=http://${NS_PREFIX}spx-user-web
+      - PRERENDER_URL=http://prerender:3000
+      - VUE_APP_TITLE=Propcom
+      - VUE_APP_ROOT=https://${AGENT_HOST}
+      - VUE_APP_API_ROOT=${API_BASE}
+      - VUE_APP_URL_APP_STORE=${VUE_APP_URL_APP_STORE}
+      - VUE_APP_URL_PLAY_STORE=${VUE_APP_URL_PLAY_STORE}
+      # Websocket
+      - VUE_APP_WS_URL=${WSS_URL}
+      - VUE_APP_WS_LOGIN=dxsrabb1tmq
+      - VUE_APP_WS_PASSCODE=dxsrabb1tmq
+
+    deploy:
+      restart_policy:
+        condition: on-failure
+      mode: replicated
+      replicas: ${SCALE_REPLICAS}
+      placement:
+        constraints:
+        - node.role==worker
+      labels:
+        - "traefik.enable=true"
+        - "traefik.http.routers.${SRV_PREFIX}spx-user-web${SUBFIX_NET}.rule=Host(`${AGENT_HOST}`) || Host(`${ALT_AGENT_HOST}`)"
+        - "traefik.http.routers.${SRV_PREFIX}spx-user-web${SUBFIX_NET}.entrypoints=web"
+        - "traefik.http.routers.${SRV_PREFIX}spx-user-web${SUBFIX_NET}.middlewares=https_redirect"
+        - "traefik.http.middlewares.https_redirect.redirectscheme.scheme=https"
+        - "traefik.http.middlewares.https_redirect.redirectscheme.permanent=true"
+        - "traefik.http.services.${SRV_PREFIX}spx-user-websvc${SUBFIX_NET}.loadbalancer.server.port=80"
+        - "traefik.http.routers.${SRV_PREFIX}spx-user-web${SUBFIX_NET}-secured.rule=Host(`${AGENT_HOST}`) || Host(`${ALT_AGENT_HOST}`)"
+        - "traefik.http.routers.${SRV_PREFIX}spx-user-web${SUBFIX_NET}-secured.entrypoints=web-secured"
+        - "traefik.http.routers.${SRV_PREFIX}spx-user-web${SUBFIX_NET}-secured.tls=true"
+    networks:
+    - traefik-public${SUBFIX_NET}
+networks:
+  traefik-public:
+    external: true
+  traefik-public-beta:
+    external: true

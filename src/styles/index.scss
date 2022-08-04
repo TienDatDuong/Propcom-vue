@@ -1,0 +1,697 @@
+/* Without this, flex shrink would not working */
+* {
+  font-family: 'Roboto', sans-serif;
+  box-sizing: border-box;
+  min-width: 0;
+  min-height: 0;
+  transition-duration: 0.1s;
+}
+
+body {
+  background: #fafafa;
+}
+
+hr {
+  background-color: #ececec;
+  opacity: 1;
+}
+
+/* width */
+::-webkit-scrollbar {
+  width: 4px;
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+  background-color: #f2f2f2;
+  border-radius: 10px;
+}
+
+/* Handle */
+::-webkit-scrollbar-thumb {
+  background: $colorPrimary;
+  border-radius: 10px;
+}
+
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+  background: #b30000;
+}
+
+#app {
+  min-height: 100vh; /* Fallback for browsers that do not support Custom Properties */
+  min-height: calc(var(--vh, 1vh) * 100);
+}
+
+.app-container {
+  height: 100%;
+}
+
+.ps > .ps__rail-y:hover,
+.ps .ps__rail-y.ps--clicking {
+  background-color: transparent;
+  opacity: 1;
+}
+.ps__rail-y > .ps__thumb-y,
+.ps__rail-y:hover > .ps__thumb-y,
+.ps__rail-y.ps--clicking > .ps__thumb-y {
+  background-color: #8ea1b9;
+  width: 4px;
+}
+
+*.unselectable {
+  -moz-user-select: none;
+  -khtml-user-select: none;
+  -webkit-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+
+.app-skeletor {
+  position: relative;
+  background-color: rgba(0, 0, 0, 0.12);
+  overflow: hidden;
+  border-radius: $borderRadiusSmall;
+  &::after {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    transform: translateX(-100%);
+    background-image: linear-gradient(90deg, rgba(255, 255, 255, 0), rgba(255, 255, 255, 0.3), rgba(37, 22, 22, 0));
+    -webkit-animation: shimmer 1.5s infinite;
+    animation: shimmer 1.5s infinite;
+    content: '';
+  }
+}
+
+.app-section-title {
+  margin: 15px 0 12px 0;
+  color: $colorNeutral;
+  font-size: 20px;
+  font-weight: bold;
+}
+
+.app-section-content {
+  flex: 8;
+  display: flex;
+  flex-direction: column;
+  row-gap: 20px;
+}
+.app-section-aside {
+  flex: 3;
+  display: flex;
+  flex-direction: column;
+  justify-items: flex-start;
+  align-items: stretch;
+  row-gap: 20px;
+}
+
+.app-hover-effect {
+  &:hover,
+  &:focus {
+    /* Darken on hover by 10% (down to 90%) */
+    filter: brightness(0.9);
+  }
+  transition: 0.1s;
+}
+
+.app-loading {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  & * {
+    transition: none;
+  }
+}
+
+// .app-dialog {
+//   position: fixed; /* Stay in place */
+//   z-index: 1; /* Sit on top */
+//   left: 0;
+//   top: 0;
+//   width: 100%; /* Full width */
+//   height: 100%; /* Full height */
+//   overflow: auto; /* Enable scroll if needed */
+//   background-color: rgb(0, 0, 0); /* Fallback color */
+//   background-color: rgba(0, 0, 0, 0.4); /* Black w/ opacity */
+//   .app-dialog-box {
+//     background-color: #fefefe;
+//     margin: 15% auto; /* 15% from the top and centered */
+//     padding: 20px;
+//     border: 1px solid #888;
+//     width: 80%; /* Could be more or less, depending on screen size */
+//   }
+//   &__header {
+//     position: relative;
+//     display: flex;
+//     justify-content: center;
+//     align-items: center;
+//   }
+//   &__title {
+//     font-style: normal;
+//     font-weight: bold;
+//     font-size: 20px;
+//     color: #0f0f0f;
+//   }
+//   &__content {
+//     font-style: normal;
+//     font-weight: normal;
+//     font-size: 15px;
+//     color: $colorNeutral;
+//   }
+// }
+
+.app-btn {
+  padding: 8px 20px;
+  border: none;
+  border-radius: 5px;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  font-size: 12px;
+  font-weight: 700;
+  text-transform: uppercase;
+  line-height: unset;
+  transition: 0.1s;
+  background: #f2f2f2;
+  color: #0f0f0f;
+  white-space: nowrap;
+  &:hover:enabled {
+    background-color: #ececec;
+  }
+  & svg,
+  & img {
+    width: 20px;
+    fill: #0f0f0f;
+  }
+  *:not(:last-child) {
+    margin-right: 10px;
+  }
+  &.app-btn-primary {
+    background: $colorPrimary;
+    color: #ffffff;
+    &:hover:enabled {
+      background-color: #d10000;
+    }
+    & svg,
+    & img {
+      width: 20px;
+      fill: #ffffff;
+    }
+  }
+  &.app-btn-secondary {
+    background: $colorSecondary;
+    color: $colorPrimary;
+    &:hover:enabled {
+      background-color: #ffd6d3;
+    }
+    & svg,
+    & img {
+      width: 20px;
+      fill: $colorPrimary;
+    }
+  }
+  &.app-btn-large {
+    height: 44px;
+  }
+  &.app-btn-xl {
+    padding: 15px;
+  }
+}
+
+.app-form-input {
+  width: 100%;
+  padding: 0;
+  border: none;
+  outline: none;
+  border-bottom: 2px solid #f2f2f2;
+  font-style: normal;
+  font-weight: bold;
+  font-size: 14px;
+  line-height: 30px;
+  color: #0f0f0f;
+  &::placeholder {
+    font-weight: normal;
+    color: #c1c1c1;
+  }
+  &:focus {
+    border-color: #04c35c;
+  }
+  &.error {
+    border-color: #dd0000;
+  }
+}
+.app-form-input-radio-wrapper {
+  margin-right: 6px;
+  width: 20px;
+  height: 20px;
+  position: relative;
+  cursor: pointer;
+  font-size: 22px;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  input {
+    position: absolute;
+    opacity: 0;
+    cursor: pointer;
+  }
+  input:checked ~ .checkmark {
+    border: 7px solid $colorActive;
+  }
+  &:hover input:not(:checked) ~ .checkmark {
+    background-color: #ccc;
+  }
+  .checkmark {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: #fafafa;
+    border: 1px solid #d6d6d6;
+    border-radius: 50%;
+    /* Create the indicator (the dot/circle - hidden when not checked) */
+    &::after {
+      content: '';
+      position: absolute;
+      display: none;
+    }
+  }
+  &__label {
+    font-style: normal;
+    font-weight: normal;
+    font-size: 14px;
+    color: #0f0f0f;
+  }
+}
+.app-form-input-checkbox-wrapper {
+  margin-right: 6px;
+  width: 20px;
+  height: 20px;
+  position: relative;
+  cursor: pointer;
+  font-size: 22px;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  input {
+    position: absolute;
+    opacity: 0;
+    cursor: pointer;
+  }
+  input:checked ~ .checkmark {
+    background-color: $colorActive;
+    border-color: $colorActive;
+    background-image: url('~@/assets/icons/colorful/icon_check.svg');
+    background-repeat: no-repeat;
+    background-position: center center;
+  }
+  &:hover input:not(:checked) ~ .checkmark {
+    background-color: #ccc;
+  }
+  .checkmark {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: #fafafa;
+    border: 1px solid #d6d6d6;
+    border-radius: 5px;
+    /* Create the indicator (the dot/circle - hidden when not checked) */
+    &::after {
+      content: '';
+      position: absolute;
+      display: none;
+    }
+  }
+  &__label {
+    font-style: normal;
+    font-weight: normal;
+    font-size: 14px;
+    color: #0f0f0f;
+  }
+}
+
+.app-form-text-error {
+  color: #dd0000;
+  font-size: 12px;
+}
+
+.app-dropdown {
+  position: absolute;
+  margin-top: 5px;
+  min-width: 240px;
+  padding: 10px 20px;
+  display: flex;
+  flex-direction: column;
+  background: #ffffff;
+  border-radius: $borderRadius;
+  box-shadow: $boxShadow;
+  border: $border;
+  z-index: 10;
+  &__item {
+    cursor: pointer;
+    padding: 10px 5px;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    color: $colorNeutral;
+    &:hover,
+    &:focus & {
+      color: $colorPrimary;
+    }
+    &:hover &__img-wapper,
+    &:focus &__img-wapper {
+      fill: $colorPrimary;
+    }
+    &:not(:last-child) {
+      border-bottom: $border;
+    }
+    &__img-wapper {
+      width: 30px;
+      display: flex;
+      flex-direction: row;
+      justify-content: center;
+      align-items: center;
+      margin-right: 5px;
+      fill: $colorNeutral;
+    }
+    span {
+      flex: 1;
+      font-size: 14px;
+    }
+  }
+}
+
+.app-pagination {
+  & .el-pagination {
+    padding: 0;
+  }
+  & .el-pagination .btn-prev {
+    width: 45px !important;
+    height: 45px !important;
+    padding: 0 !important;
+    border-radius: $borderRadius;
+    background: #f2f2f2;
+    margin-right: 10px;
+  }
+  & .el-pagination .btn-next {
+    width: 45px !important;
+    height: 45px !important;
+    padding: 0 !important;
+    border-radius: $borderRadius;
+    background: #f2f2f2;
+    margin-left: 10px;
+  }
+  & .el-pagination .el-pager {
+    height: 45px !important;
+    display: inline-flex;
+    flex-direction: row;
+    border: 1px solid #f0f0f0;
+    border-radius: $borderRadius;
+    box-sizing: border-box !important;
+  }
+  & .el-pagination .number,
+  & .el-pagination .more {
+    width: 45px !important;
+    height: 100% !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    border-radius: $borderRadius;
+    background: transparent;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    box-sizing: border-box !important;
+    color: #11142d;
+    font-weight: bold;
+    font-size: 14px;
+    &.active {
+      color: #ffffff;
+      background: $colorPrimary;
+    }
+  }
+}
+
+.app-title {
+  color: $colorPrimary;
+  font-size: 20px;
+  font-weight: bold;
+  text-transform: uppercase;
+}
+
+.app-text-warning {
+  color: #ff0000;
+}
+
+.app-dialog {
+  .el-dialog__header {
+    border-bottom: $border;
+    text-align: center;
+    padding: 16px 15px 16px 15px;
+    & .el-dialog__headerbtn {
+      top: 15px;
+      & .el-icon {
+        font-size: 20px;
+      }
+    }
+  }
+  .app-dialog-title {
+    font-style: normal;
+    font-weight: bold;
+    font-size: 16px;
+    color: #0f0f0f;
+  }
+  .app-dialog-content {
+    padding-top: 20px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: stretch;
+    word-break: break-word;
+    text-align: center;
+    &__actions {
+      margin-top: 30px;
+      display: flex;
+      flex-direction: row;
+      justify-content: center;
+      align-items: center;
+      column-gap: 10px;
+      button {
+        width: 40%;
+        max-width: 300px;
+      }
+    }
+  }
+}
+.app-dialog-no-padding {
+  overflow: hidden;
+  .el-dialog__header,
+  .el-dialog__body {
+    padding: 0;
+  }
+  .el-dialog__close {
+    color: #ffffff;
+    width: 24px;
+    height: 24px;
+    font-size: 24px;
+  }
+}
+
+.app-dot-seperator {
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+  background: #a7a7a7;
+}
+
+.app-label-section {
+  font-style: normal;
+  font-weight: bold;
+  font-size: 15px;
+  color: $colorNeutral;
+}
+
+.app-table {
+  th,
+  td {
+    border-bottom: $border;
+  }
+  .cell {
+    padding: 0;
+  }
+  th.el-table__cell {
+    font-style: normal;
+    font-weight: 500;
+    font-size: 14px;
+    color: #0f0f0f;
+  }
+}
+
+.app-tab {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  .app-tab-btn {
+    &:not(:first-child) {
+      padding-left: 20px;
+    }
+    &:not(:last-child) {
+      padding-right: 20px;
+      border-right: 1px solid #d6d6d6;
+    }
+    &:hover,
+    &:focus,
+    &.active {
+      color: #0f0f0f;
+    }
+    cursor: pointer;
+    font-style: normal;
+    font-weight: 500;
+    font-size: 13px;
+    color: #c1c1c1;
+    transition: 0.1s;
+  }
+}
+
+.app-carousel-fullsize {
+  $bgColor: rgba(0, 0, 0, 0);
+  .el-carousel {
+    height: 100%;
+
+    .carousel__indicators {
+      display: none;
+    }
+
+    .el-carousel__container {
+      height: 80%;
+      top: 10%;
+      width: 80%;
+      left: 10%;
+
+      .el-carousel__item {
+        width: 80%;
+        left: 10%;
+      }
+
+      button.el-carousel__arrow {
+        background-color: #ffffff;
+        color: #000000;
+
+        &:hover {
+          background-color: #000000;
+          color: #ffffff;
+        }
+      }
+
+      .post-media-component {
+        border-color: $bgColor;
+      }
+
+      .post-media-component__background {
+        background-size: contain;
+        background-color: #ffffff;
+      }
+    }
+  }
+}
+
+.post-creator-dialog {
+  .el-dialog {
+    &__header {
+      border-bottom: $border;
+      padding-top: 10px;
+    }
+    &__headerbtn {
+      top: 10px;
+    }
+    &__body {
+      padding: 0 0 10px 0;
+      position: relative;
+      overflow: auto;
+      max-height: 65vh;
+    }
+    &__footer {
+      border-top: $border;
+      padding-bottom: 10px;
+    }
+  }
+
+  &__textarea {
+    textarea {
+      border: none;
+      padding: 0;
+    }
+  }
+}
+
+.app-input-hidden-border {
+  border: none;
+  &:focus {
+    outline: none;
+  }
+}
+
+.el-select-dropdown__item {
+  &.selected {
+    color: #606266;
+  }
+}
+
+.app-ag-theme-alpine.ag-theme-alpine {
+  & .ag-root-wrapper {
+    border-radius: 5px !important;
+    border: 1px solid #f2f2f2;
+  }
+  & .ag-header {
+    border-color: #f2f2f2;
+  }
+  & .ag-cell-wrapper {
+    height: 100%;
+  }
+  ::-webkit-scrollbar {
+    width: 6px !important;
+    height: 6px !important;
+  }
+  & .app-grid-render {
+    &__btn {
+      padding: 0 20px;
+    }
+  }
+  & .ag-cell {
+    border: none !important;
+  }
+}
+
+.app-pagination-customize {
+  margin-top: 20px;
+  & .el-pagination {
+    display: flex !important;
+    justify-content: flex-end;
+    &__jump {
+      display: flex !important;
+      & .el-input__inner {
+        border-radius: 100px;
+        width: 50px;
+      }
+    }
+    &__sizes {
+      & .el-input {
+        width: 110px !important;
+        &__inner {
+          border-radius: 100px !important;
+        }
+      }
+    }
+  }
+}

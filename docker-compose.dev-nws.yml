@@ -1,0 +1,13 @@
+version: "3"
+
+services:
+  spx-web-user:
+    environment:
+      - NODE_ENV=development
+    build:
+      context: ./
+      dockerfile: Dockerfile-dev
+      args:
+        - BUILD_SCRIPT=build:dev-nws
+        - WEB_HOST=http://spx-web-user
+        - PRERENDER_URL=http://prerender:3000

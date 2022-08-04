@@ -1,0 +1,47 @@
+/**
+ * Load global thông qua sass-loader
+ * https://webdevetc.com/programming-tricks/vue3/vue3-guides/vue-3-global-scss-sass-variables/
+ */
+
+$borderRadius: 10px;
+$borderRadiusSmall: 5px;
+$boxShadow: 0px 10px 30px rgba(0, 0, 0, 0.05);
+$boxShadowInset: inset 0px 1px 4px rgba(0, 0, 0, 0.3); // Shadow ngược (đổ bóng ngược vào element có set box-shadow) - dùng cho khoảng giữa các section trên web (header/body...)
+$border: 1px solid #f2f2f2;
+
+$colorPrimary: #dd0000;
+$colorPrimaryDark: #ad0000;
+$colorSecondary: #ffeeed;
+$colorNeutral: #5a5a5a;
+$colorHoverBackground: #efefef;
+$colorActive: #FB4D4D;
+
+// Nên hạn chế số lượng màu cần define global thôi
+$colorWhite: #ffffff;
+$colorWhiteLight: #fafafa;
+$colorGray: #a7a7a7a7;
+$textColor: #0f0f0f;
+$textColorLight: #c1c1c1;
+$colorBlue: #1890f7;
+$colorBlueLight: #def0ff;
+$colorYellow: #eda30c;
+$colorGreen: #00860a;
+$colorGreenLight: #eaffeb;
+$colorPink: #ff7f76;
+
+$appHeaderHeight: 60px;
+$appZindexHeader: 20; // Z-index header
+$appZindexSticky: 10; // Z-index element có position: sticky
+
+.transition-opacity {
+  transition: opacity;
+}
+.duration-100 {
+  transition-duration: 0.1s;
+}
+.opacity-0 {
+  opacity: 0;
+}
+.opacity-100 {
+  opacity: 100;
+}
